@@ -1,6 +1,3 @@
-# Component
-组件化框架
-
 # Android组件化
 ## 1.什么是组件化
 
