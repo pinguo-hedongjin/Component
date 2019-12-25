@@ -1,0 +1,15 @@
+apply from: "$gradle_root/application_config.gradle"
+
+android {
+    sourceSets {
+        main {
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+        }
+    }
+}
+dependencies {
+    if (isBuildModule.toBoolean()) {
+        implementation project(':business:Module1')
+        implementation project(':business:Module2')
+    }
+}

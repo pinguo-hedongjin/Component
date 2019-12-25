@@ -1,0 +1,5 @@
+include ':App'
+
+include ':business:Module1', ':business:Module2'
+
+include ':library:CommonSDK', ':library:CommonRegister', ':library:RouterSDK', ':library:RouterRegister'

@@ -1,0 +1,113 @@
+ext.gradle_root = rootDir.absolutePath + "/script/gradle"
+
+def buildVersions = [
+        minSdkVersion   : 19,
+        targetSdkVersion: 28,
+        buildTools      : "28.0.3"
+]
+ext.buildVersions = buildVersions
+
+def appConfig = [
+        applicationId: "com.component.demo",
+        versionCode  : 370,
+        versionName  : "3.7.0",
+]
+ext.appConfig = appConfig
+
+def dependVersion = [
+        // plugin
+        androidPlugin          : "3.4.2",
+        kotlinPlugin           : "1.3.50",
+        lifecyclePlugin        : "1.0.0",
+        routerPlugin           : "1.0.0",
+
+        // kotlin
+        kotlinVersion          : "1.3.41",
+        coroutinesVersion      : "1.3.0-M1",
+
+        // support
+        appcompatVersion       : "1.0.2",
+        materialVersion        : "1.0.0",
+        constraintVersion      : "1.1.3",
+        lifecycleExtVersion    : "2.2.0-alpha01",
+
+        // rx
+        rxJavaVersion          : "2.2.9",
+        rxAndroidVersion       : "2.1.1",
+        rxKotlinVersion        : "2.3.0",
+
+        // third
+        pagingVersion          : "2.1.0",
+        gsonVersion            : "2.8.5",
+        autosizeVersion        : "1.1.2",
+
+        // test
+        junitVersion           : "4.12",
+        espressoVersion        : "3.0.2",
+        leakCanaryVersion      : "2.0-alpha-3",
+        debugDatabaseVersion   : "1.0.6",
+]
+
+def deps = [
+        "androidPlugin"          : "com.android.tools.build:gradle:${dependVersion.androidPlugin}",
+]
+def plugin = [
+        "androidPlugin"          : "com.android.tools.build:gradle:${dependVersion.androidPlugin}",
+        "kotlinPlugin"           : "org.jetbrains.kotlin:kotlin-gradle-plugin:${dependVersion.kotlinPlugin}",
+        "lifecyclePlugin"        : "com.kubi.lifecycle:register:${dependVersion.lifecyclePlugin}",
+        "routerPlugin"           : "com.kubi.router:register:${dependVersion.routerPlugin}",
+]
+deps.plugin = plugin.values()
+
+def kotlinDeps = [
+        "kotlinStdlib"          : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${dependVersion.kotlinVersion}",
+        "kotlinReflect"         : "org.jetbrains.kotlin:kotlin-reflect:${dependVersion.kotlinVersion}",
+        "coroutineCore"         : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${dependVersion.coroutinesVersion}",
+        "coroutinesJdk"         : "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${dependVersion.coroutinesVersion}"
+]
+deps.kotlin = kotlinDeps.values()
+
+def supportDeps = [
+        "appcompat"             : "androidx.appcompat:appcompat:${dependVersion.appcompatVersion}",
+        "material"              : "com.google.android.material:material:${dependVersion.materialVersion}",
+        "constraintLayout"      : "androidx.constraintlayout:constraintlayout:${dependVersion.constraintVersion}",
+        "lifecycleExt"          : "android.arch.lifecycle:extensions:${dependVersion.lifecycleExtVersion}"
+]
+deps.support = supportDeps.values()
+
+def rxJava = [
+        "rxJava"                : "io.reactivex.rxjava2:rxjava:${dependVersion.rxJavaVersion}",
+        "rxAndroid"             : "io.reactivex.rxjava2:rxandroid:${dependVersion.rxAndroidVersion}",
+        "rxKotlin"              : "io.reactivex.rxjava2:rxkotlin:${dependVersion.rxKotlinVersion}"
+]
+deps.rx = rxJava.values()
+
+def third = [
+        "gson"                       : "com.google.code.gson:gson:${dependVersion.gsonVersion}",
+        "autosize"                   : "me.jessyan:autosize:${dependVersion.autosizeVersion}",
+        "pagingRuntime"              : "android.arch.paging:runtime:${dependVersion.pagingVersion}",
+        "pagingRxjava"               : "android.arch.paging:rxjava2:${dependVersion.pagingVersion}"
+]
+deps.third = third.values()
+
+def testDeps = [
+        "junit"            : "junit:junit:${dependVersion.junitVersion}",
+        "debugDatabase"    : "com.amitshekhar.android:debug-db:${dependVersion.debugDatabaseVersion}",
+        "leakCanaryDebug"  : "com.squareup.leakcanary:leakcanary-android:${dependVersion.leakCanaryVersion}"
+]
+deps.testDeps = testDeps.values()
+
+ext.deps = deps
+
+def addRepos(RepositoryHandler handler) {
+    handler.google()
+    handler.jcenter()
+    handler.mavenCentral()
+//    handler.maven { url "./repo" }
+    handler.maven { url "https://maven.google.com" }
+    handler.maven { url "https://jitpack.io" }
+    handler.maven { url "https://dl.bintray.com/guardian/android" }
+    handler.maven { url "https://dl.bintray.com/pinguo-hedongjin/maven" }
+}
+
+ext.addRepos = this.&addRepos

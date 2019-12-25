@@ -1,0 +1,35 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.kubi.router'
+apply plugin: 'com.kubi.lifecycle'
+apply from: "$gradle_root/kotlin_config.gradle"
+
+android {
+    defaultConfig {
+        applicationId appConfig.applicationId
+        versionCode appConfig.versionCode
+        versionName appConfig.versionName
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            minifyEnabled false
+            shrinkResources false
+        }
+        release {
+            minifyEnabled true
+            shrinkResources true
+        }
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'src/debug/AndroidManifest.xml'
+        }
+    }
+}
+
+dependencies {
+    implementation project(':library:RouterSDK')
+    implementation project(':library:CommonSDK')
+}
