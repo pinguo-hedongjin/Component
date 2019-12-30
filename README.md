@@ -52,18 +52,3 @@ kucoin采用 单工程 + 多模块 结构，模块之间通过源码方式依赖
 
 主要为业务层提供跨组件跳转支持，通过声明式协议方式，实现"业务组件"跳转 和 暴露服务 
 如：交易模块需要获取用户登录状态，就需要通过认证模块的提供的服务来获取
-
-## 5.项目讲解
-
-### 5.1 如何让组件独立运行
-
-在项目跟目录的gradle.properies中，改变isBuildModule的值即可
-
-isBuildModule=true // true: 可以使每个组件独立运行，false: 所有组件集成到宿主app中
-
-### 5.2 配置AndroidManifest
-
-组件独立运行和集成到宿主需要配置不同的manifest，在独立运行时需要其中一个activity配置入口，而集成到宿主时，
-则依赖于宿主入口
-
-apply from: "$gradle_root/component_config.gradle"
