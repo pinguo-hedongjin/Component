@@ -1,5 +1,0 @@
-if (isBuildModule.toBoolean()) {
-    apply from: "$gradle_root/library_config.gradle"
-} else {
-    apply from: "$gradle_root/application_config.gradle"
-}

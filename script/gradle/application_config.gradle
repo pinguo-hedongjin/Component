@@ -21,12 +21,6 @@ android {
             shrinkResources true
         }
     }
-
-    sourceSets {
-        main {
-            manifest.srcFile 'src/debug/AndroidManifest.xml'
-        }
-    }
 }
 
 dependencies {

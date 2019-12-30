@@ -1,0 +1,5 @@
+apply from: "$gradle_root/application_config.gradle"
+
+dependencies {
+    implementation project(':business:Module2')
+}

@@ -1,4 +1,4 @@
-include ':App'
+include ':app:Component', ":app:Module1Run", ":app:Module2Run"
 
 include ':business:Module1', ':business:Module2'
 
