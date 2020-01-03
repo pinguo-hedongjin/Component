@@ -32,8 +32,8 @@ class Module2Fragment : BaseFragment() {
 
 
         name.setOnClickListener {
-            (Router.navigation(Uri.parse("service://app/home")) as? IService)?.let {
-                Toast.makeText(activity!!, it.call<String>("getModuleName"), Toast.LENGTH_SHORT).show()
+            (Router.with(activity).uri(Uri.parse("service://module1/home")).navigation() as? IService)?.let {
+                Toast.makeText(activity!!, it.call<String>("getTeacherName"), Toast.LENGTH_LONG).show()
             }
         }
     }

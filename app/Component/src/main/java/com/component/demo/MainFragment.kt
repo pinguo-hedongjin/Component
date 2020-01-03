@@ -31,12 +31,12 @@ class MainFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         action.setOnClickListener {
-            Router.navigation(Uri.parse("fragment://module1/home"))
+            Router.with(activity).uri(Uri.parse("fragment://module1/home")).navigation()
         }
 
 
         name.setOnClickListener {
-            (Router.navigation(Uri.parse("service://module1/home")) as? IService)?.let {
+            (Router.with(activity).uri(Uri.parse("service://module1/home")).navigation() as? IService)?.let {
                 Toast.makeText(activity!!, it.call<String>("getModuleName"), Toast.LENGTH_SHORT).show()
             }
         }

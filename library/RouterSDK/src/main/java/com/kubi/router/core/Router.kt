@@ -14,6 +14,7 @@ import com.kubi.router.ui.HolderActivity
 import com.kubi.router.ui.IResult
 import com.kubi.router.ui.Request
 import com.kubi.router.utils.LogUtils
+import com.kubi.router.utils.action
 import com.kubi.router.utils.bind
 import java.lang.RuntimeException
 
@@ -33,12 +34,7 @@ object Router {
     private val services = hashMapOf<String, Any>()
 
     private val interceptors = mutableListOf<IInterceptor>().apply {
-        add(object : IInterceptor {
-            override fun intercept(chain: IChain): Any? {
-                return _navigation(chain.postcard())
-            }
-
-        })
+        add(DefaultInterceptor())
     }
 
     fun init(_context: Context) {
@@ -51,36 +47,27 @@ object Router {
         }
     }
 
-    /***
-     * 跳转页面
-     * @param uri Uri fragment://lever/market?coin=kcs
-     * @param callback IResult 是否使用startActivityForResult启动
-     */
-    fun navigation(uri: Uri, callback: IResult? = null): Any? {
-        checkNotNull(context) { LogUtils.e("请初始化后，在使用Router") }
-        return navigation(context!!, uri, callback)
-    }
-
-    fun navigation(context: Context, uri: Uri, callback: IResult? = null): Any? {
-        return navigation(Postcard.Builder().setContext(context).setResult(callback).build(uri))
-    }
+    fun with(context: Context? = null) = Postcard.Builder()._context(context)
 
     fun navigation(postcard: Postcard): Any? {
-        return if (!postcard.greenChannel) {
-            InterceptorChain(interceptors, interceptors.size - 1, postcard).proceed(postcard)
-        } else {
-            _navigation(postcard)
-        }
+        val interceptors = postcard.interceptors?.apply {
+            add(0, DefaultInterceptor())
+        } ?: interceptors
+
+        return InterceptorChain(interceptors, interceptors.size - 1, postcard).proceed(postcard)
     }
 
     private fun _navigation(postcard: Postcard): Any? {
-        return when (postcard.route) {
+        val schema = postcard.uri.scheme
+        val action = postcard.uri.action
+
+        return when (schema) {
             ROUTE_ACTIVITY -> {
-                checkNotNull(routes[postcard.action]) { "没有找到相关路由" }
+                checkNotNull(routes[action]) { "没有找到相关路由" }
 
                 val context = postcard.context ?: checkNotNull(context) { "没有初始化" }
 
-                val intent = Intent(context, routes[postcard.action]!!).apply {
+                val intent = Intent(context, routes[action]!!).apply {
                     putExtras(Bundle().bind(postcard.uri))
                 }
 
@@ -89,12 +76,12 @@ object Router {
                 true
             }
             ROUTE_FRAGMENT -> {
-                checkNotNull(routes[postcard.action]) { "没有找到相关路由" }
+                checkNotNull(routes[action]) { "没有找到相关路由" }
 
                 val context = postcard.context ?: checkNotNull(context) { "没有初始化" }
 
                 val intent = Intent(context, Class.forName("com.kubi.sdk.BaseActivity")).apply {
-                    putExtra(ROUTE_FRAGMENT, routes[postcard.action]!!.name)
+                    putExtra(ROUTE_FRAGMENT, routes[action]!!.name)
                     putExtras(Bundle().bind(postcard.uri))
                 }
 
@@ -103,8 +90,8 @@ object Router {
                 true
             }
             ROUTE_SERVICE -> {
-                checkNotNull(services[postcard.action]) { "没有找到相关服务" }
-                ServiceProxy(services[postcard.action]!!)
+                checkNotNull(services[action]) { "没有找到相关服务" }
+                ServiceProxy(services[action]!!)
             }
             else -> throw RuntimeException("未知的Route类型")
         }
@@ -125,4 +112,8 @@ object Router {
         startActivity(intent)
     }
 
+
+    private class DefaultInterceptor : IInterceptor {
+        override fun intercept(chain: IChain) = _navigation(chain.postcard())
+    }
 }

@@ -9,6 +9,6 @@
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="获取App名字"/>
+        android:text="获取老师名字"/>
 
 </LinearLayout>

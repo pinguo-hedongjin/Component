@@ -14,20 +14,10 @@ import com.kubi.router.ui.IResult
  * description: Please contact me if you have any questions
  */
 
-fun Uri.Builder.route(route: String) = scheme(route)
-
-fun Uri.Builder.module(module: String) = authority(module)
-
-fun Uri.Builder.appendParam(key: String, value: Any) = appendQueryParameter(key, value.toString())
-
-val Uri.route: String?
-    get() = scheme
-
-val Uri.module: String?
-    get() = authority
+fun Uri.Builder.appendParamter(key: String, value: Any) = appendQueryParameter(key, value.toString())
 
 val Uri.action: String
-    get() = "${module}${path}"
+    get() = "${authority}${path}"
 
 fun <T> Bundle.opt(key: String, default: T, map: String.() -> T): T {
     return getString(key)?.map() ?: default
