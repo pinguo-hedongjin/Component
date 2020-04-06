@@ -54,8 +54,8 @@ def deps = [
 def plugin = [
         "androidPlugin"          : "com.android.tools.build:gradle:${dependVersion.androidPlugin}",
         "kotlinPlugin"           : "org.jetbrains.kotlin:kotlin-gradle-plugin:${dependVersion.kotlinPlugin}",
-        "lifecyclePlugin"        : "com.kubi.lifecycle:register:${dependVersion.lifecyclePlugin}",
-        "routerPlugin"           : "com.kubi.router:register:${dependVersion.routerPlugin}",
+        "lifecyclePlugin"        : "com.kubi.plugin:lifecycle:${dependVersion.lifecyclePlugin}",
+        "routerPlugin"           : "com.kubi.plugin:router:${dependVersion.routerPlugin}",
 ]
 deps.plugin = plugin.values()
 
@@ -103,11 +103,10 @@ def addRepos(RepositoryHandler handler) {
     handler.google()
     handler.jcenter()
     handler.mavenCentral()
-//    handler.maven { url "./repo" }
+    handler.maven { url "./repo" }
     handler.maven { url "https://maven.google.com" }
     handler.maven { url "https://jitpack.io" }
     handler.maven { url "https://dl.bintray.com/guardian/android" }
-    handler.maven { url "https://dl.bintray.com/pinguo-hedongjin/maven" }
 }
 
 ext.addRepos = this.&addRepos

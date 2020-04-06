@@ -1,7 +1,7 @@
 package com.component.demo
 
 import androidx.annotation.Keep
-import com.kubi.router.annotation.Service
+import com.kubi.router.annotation.Route
 
 /**
  * author:  hedongjin
@@ -10,7 +10,7 @@ import com.kubi.router.annotation.Service
  */
 
 @Keep
-@Service(module = "app", path = "home")
+@Route(module = "app", path = "service", desc = "App")
 class MainService {
     fun getModuleName() = "我的名字:App"
 }

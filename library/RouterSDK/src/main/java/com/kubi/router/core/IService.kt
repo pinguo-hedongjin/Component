@@ -15,11 +15,16 @@ interface IService {
      * @param args Array<out Any>
      */
     fun <T> call(method: String, vararg args: Any?): T?
+
 }
 
 internal class ServiceProxy(private val service: Any) : IService {
 
     override fun <T> call(method: String, vararg args: Any?): T? {
+        return findMethod(method, args).call(service, args) as T?
+    }
+
+    fun <T> invoke(method: String, args: Array<out Any?>): T? {
         return findMethod(method, args).call(service, args) as T?
     }
 
@@ -93,5 +98,4 @@ internal class ServiceProxy(private val service: Any) : IService {
             else -> throw RuntimeException("不支持的参数长度")
         }
     }
-
 }

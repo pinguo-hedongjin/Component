@@ -4,4 +4,5 @@ apply from: "$gradle_root/kotlin_config.gradle"
 dependencies {
     api deps.rx
     api deps.third
+    api "com.wang.avi:library:2.1.3"
 }

@@ -1,10 +1,13 @@
 package com.kubi.sdk
 
+import android.os.Parcelable
 import android.util.SparseArray
 import android.view.ViewGroup
 import androidx.paging.PagedList
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
+import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
 /**
  * author:  hedongjin
@@ -14,8 +17,7 @@ import androidx.recyclerview.widget.DiffUtil
 open class BasePagedAdapter<T : Any>(
         open val proxys: SparseArray<Class<*>>,
         open val callbacks: SparseArray<ItemCallBack<*>>,
-        open val diffCb: DiffUtil.ItemCallback<T>,
-        open val refresh: ((Int) -> Unit)?
+        open val diffCb: DiffUtil.ItemCallback<T>
 ) : PagedListAdapter<T, InnerViewHolder<T>>(diffCb) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InnerViewHolder<T> {
@@ -34,13 +36,6 @@ open class BasePagedAdapter<T : Any>(
         return getItem(position)!!.javaClass.name.hashCode()
     }
 
-    override fun getItem(position: Int): T? {
-        return super.getItem(position).apply {
-            refresh?.invoke(itemCount)
-        }
-    }
-
-
     override fun submitList(pagedList: PagedList<T>?) {
         super.submitList(pagedList)
         notifyDataSetChanged()
@@ -49,12 +44,6 @@ open class BasePagedAdapter<T : Any>(
     open class Builder<T : Any> {
         val proxys: SparseArray<Class<*>> = SparseArray()
         val callbacks: SparseArray<ItemCallBack<*>> = SparseArray()
-        var refresh: ((Int) -> Unit)? = null
-
-        fun setRefreshListener(refresh: (Int) -> Unit): Builder<T> {
-            this.refresh = refresh
-            return this
-        }
 
         fun register(cls: Class<*>, proxy: Class<*>, callBack: ItemCallBack<*>? = null): Builder<T> {
             proxys.put(cls.name.hashCode(), proxy)
@@ -64,6 +53,17 @@ open class BasePagedAdapter<T : Any>(
             return this
         }
 
-        open fun build(diffCb: DiffUtil.ItemCallback<T>) = BasePagedAdapter(proxys, callbacks, diffCb, refresh)
+        open fun build(diffCb: DiffUtil.ItemCallback<T>) = BasePagedAdapter(proxys, callbacks, diffCb)
     }
 }
+
+data class PageEntity<T>(
+        @SerializedName("items") val items: List<T>?,
+        @SerializedName("hasNext") val hasNext: Boolean,
+        @SerializedName("context") val context: PageContext?
+)
+
+@Parcelize
+data class PageContext(
+        @SerializedName("index") val index: Int
+) : Parcelable

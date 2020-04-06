@@ -8,6 +8,7 @@ import com.android.build.api.transform.TransformInvocation
 import com.android.build.gradle.internal.pipeline.TransformManager
 import com.kubi.lifecycle.utils.Logger
 import org.gradle.api.Project
+import com.android.utils.FileUtils
 
 /**
  * author:  hedongjin
@@ -49,11 +50,13 @@ class RegisterTransform extends Transform {
         def startTime = System.currentTimeMillis()
         def generator = new RegisterCodeGenerator(project)
 
+        Logger.i "开始删除Lifecycle历史缓存..."
+        transformInvocation.outputProvider.deleteAll()
+        Logger.i "完成删除Lifecycle历史缓存..."
+
         Logger.i "开始扫描Lifecycle信息..."
         generator.scanRegister(transformInvocation)
         Logger.i "完成扫描Lifecycle信息..."
-
-        Logger.i "================================================"
 
         Logger.i "开始插入Lifecycle代码..."
         generator.insertRegister(transformInvocation)

@@ -6,6 +6,7 @@ import com.android.build.api.transform.Transform
 import com.android.build.api.transform.TransformException
 import com.android.build.api.transform.TransformInvocation
 import com.android.build.gradle.internal.pipeline.TransformManager
+import com.android.utils.FileUtils
 import com.kubi.router.utils.Logger
 import org.gradle.api.Project
 
@@ -48,6 +49,10 @@ class RegisterTransform extends Transform {
 
         def startTime = System.currentTimeMillis()
         def generator = new RegisterCodeGenerator(project)
+
+        Logger.i "开始删除Router历史缓存..."
+        transformInvocation.outputProvider.deleteAll()
+        Logger.i "完成删除Router历史缓存..."
 
         Logger.i "开始扫描Router信息..."
         generator.scanRegister(transformInvocation)

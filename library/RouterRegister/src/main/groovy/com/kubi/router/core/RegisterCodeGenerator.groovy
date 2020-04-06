@@ -37,6 +37,17 @@ class RegisterCodeGenerator {
 
     void scanRegister(TransformInvocation transformInvocation) {
         transformInvocation.inputs.each {
+
+            // 添加path
+            it.jarInputs.each {
+                scanPool.appendClassPath(it.file.absolutePath)
+            }
+
+            it.directoryInputs.each {
+                scanPool.appendClassPath(it.file.absolutePath)
+            }
+
+            // 扫描路由
             it.jarInputs.each {
 
                 def src = it.file
@@ -47,7 +58,6 @@ class RegisterCodeGenerator {
                         Format.JAR
                 )
 
-                scanPool.appendClassPath(it.file.absolutePath)
                 scanJar(src, dest)
 
                 FileUtils.copyFile(src, dest)
@@ -63,7 +73,6 @@ class RegisterCodeGenerator {
                         Format.DIRECTORY
                 )
 
-                scanPool.appendClassPath(it.file.absolutePath)
                 scanDirectory(it.file)
 
                 FileUtils.copyDirectory(src, dest)
@@ -143,29 +152,30 @@ class RegisterCodeGenerator {
             Utils.getAnnotations(ct).each {
 
                 if (it.typeName == Constants.REGISTER_ROUTE_ANNOTATION_NAME) {
+
                     def _module = ((StringMemberValue)it.getMemberValue("module")).getValue()
                     def _path = ((StringMemberValue)it.getMemberValue("path")).getValue()
-                    def uri = "${_module}/${_path}"
-                    if (routeMap.containsKey(uri)) {
-                        throw new RuntimeException("存在重复uri = ${uri}")
-                    } else {
-                        routeMap[uri] = className
+                    def _action = "${_module}/${_path}"
+                    if (routeMap.containsKey("${Constants.SCHEME_ACTIVITY_NAME}://${_action}") ||
+                            routeMap.containsKey("${Constants.SCHEME_FRAGMENT_NAME}://${_action}") ||
+                            serviceMap.containsKey("${Constants.SCHEME_SERVICE_NAME}://${_action}")) {
+                        throw new RuntimeException("存在重复uri = ${_action}")
                     }
 
-                    Logger.i "scan route = " + className + ", uri = " + uri
-                }
-
-                if (it.typeName == Constants.REGISTER_SERVICE_ANNOTATION_NAME) {
-                    def _module = ((StringMemberValue)it.getMemberValue("module")).getValue()
-                    def _path = ((StringMemberValue)it.getMemberValue("path")).getValue()
-                    def uri = "${_module}/${_path}"
-                    if (serviceMap.containsKey(uri)) {
-                        throw new RuntimeException("存在重复uri = ${uri}")
+                    def uri
+                    if (isAssignableFrom(Constants.SUPER_ACTIVITY_CLASS_NAME, ct)) {
+                        uri = "${Constants.SCHEME_ACTIVITY_NAME}://${_action}"
+                        routeMap[uri] = className
+                    } else if (isAssignableFrom(Constants.SUPER_FRAGMENT_CLASS_NAME, ct)) {
+                        uri = "${Constants.SCHEME_FRAGMENT_NAME}://${_action}"
+                        routeMap[uri] = className
                     } else {
+                        uri = "${Constants.SCHEME_SERVICE_NAME}://${_action}"
                         serviceMap[uri] = className
                     }
 
-                    Logger.i "scan service = " + className + ", uri = " + uri
+                    Logger.i "scan route = " + className + ", uri = " + uri
+
                 }
 
                 if (it.typeName == Constants.REGISTER_INTERCEPTOR_ANNOTATION_NAME) {
@@ -307,5 +317,20 @@ class RegisterCodeGenerator {
 
         return list
     }
+
+    private boolean isAssignableFrom(String className, CtClass routeCt) {
+        String superClassName = routeCt.classFile.superclass
+        if (superClassName == null) {
+            return false
+        }
+
+        if (superClassName == className) {
+            return true
+        }
+
+        return isAssignableFrom(className, routeCt.superclass)
+    }
+
+
 
 }

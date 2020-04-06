@@ -13,6 +13,32 @@ class Constants {
     static final def SUFFIX_CLASS_NAME = ".class"
 
     /***
+     * activity的scheme
+     */
+    static final def SCHEME_ACTIVITY_NAME = "activity"
+
+    /***
+     * fragment的scheme
+     */
+    static final def SCHEME_FRAGMENT_NAME = "fragment"
+
+    /***
+     * service的scheme
+     */
+    static final def SCHEME_SERVICE_NAME = "service"
+
+    /***
+     * Activity类
+     */
+    static final def SUPER_ACTIVITY_CLASS_NAME = "android.app.Activity"
+
+    /***
+     * Fragment类
+     */
+    static final def SUPER_FRAGMENT_CLASS_NAME = "androidx.fragment.app.Fragment"
+
+
+    /***
      * 生成类
      */
     static final def GENERATE_TO_CLASS_NAME = "com.kubi.router.core.Register"
@@ -41,11 +67,6 @@ class Constants {
      * 注册route的注解名
      */
     static final def REGISTER_ROUTE_ANNOTATION_NAME = "com.kubi.router.annotation.Route"
-
-    /***
-     * 注册service的注解名
-     */
-    static final def REGISTER_SERVICE_ANNOTATION_NAME = "com.kubi.router.annotation.Service"
 
     /***
      * 注册interceptor的注解名

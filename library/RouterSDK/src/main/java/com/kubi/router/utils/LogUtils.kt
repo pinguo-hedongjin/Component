@@ -11,7 +11,7 @@ object LogUtils {
     private const val TAG = "Router"
 
     @Volatile
-    private var debug: Boolean = false
+    private var debug: Boolean = true
 
     fun setDebug(_debug: Boolean) {
         debug = _debug

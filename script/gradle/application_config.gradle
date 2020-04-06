@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
+apply from: "$gradle_root/kotlin_config.gradle"
 apply plugin: 'com.kubi.router'
 apply plugin: 'com.kubi.lifecycle'
-apply from: "$gradle_root/kotlin_config.gradle"
 
 android {
     defaultConfig {

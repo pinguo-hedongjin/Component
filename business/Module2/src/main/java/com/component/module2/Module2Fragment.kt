@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.fragment_module2.*
  * date:  2019-12-25
  * description: Please contact me if you have any questions
  */
-@Route(module = "module2", path = "home")
+@Route(module = "module2", path = "home", desc = "home页面")
 class Module2Fragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,9 +32,11 @@ class Module2Fragment : BaseFragment() {
 
 
         name.setOnClickListener {
-            (Router.with(activity).uri(Uri.parse("service://module1/home")).navigation() as? IService)?.let {
-                Toast.makeText(activity!!, it.call<String>("getTeacherName"), Toast.LENGTH_LONG).show()
-            }
+            Toast.makeText(
+                activity!!,
+                Router.getService(IModule1Proxy::class.java).getTeacherName(),
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 

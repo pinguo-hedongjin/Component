@@ -3,6 +3,8 @@ package com.kubi.sdk
 import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
+import android.os.Build
+import androidx.multidex.MultiDex
 import com.kubi.sdk.delegate.AppDelegate
 
 /**
@@ -16,6 +18,9 @@ class BaseApplication : Application() {
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            MultiDex.install(base)
+        }
         instance = this
         delegate.attachBaseContext(base)
     }
@@ -37,6 +42,8 @@ class BaseApplication : Application() {
 
     companion object {
         private lateinit var instance: Application
+
+        @JvmStatic
         fun get() = instance
     }
 }

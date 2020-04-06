@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--主色-->
+    <color name="main_green">#24AE8F</color>
+
+    <!--辅助色-->
+    <color name="assistant_blue">#0F7DFF</color>
+    <color name="assistant_red">#DC5656</color>
+    <color name="assistant_yellow">#F8C91C</color>
+
+    <!--重点文字-->
+    <color name="font_main_light_white">#FFFFFF</color>
+    <color name="font_main_dark_white">#DAEBFF</color>
+
+    <!--提示文字-->
+    <color name="font_tips_light_gray_blue">#84A8D3</color>
+    <color name="font_tips_dark_gray_blue">#73879F</color>
+    <color name="font_tips_input_gray_blue">#374558</color>
+
+    <!--背景色-->
+    <color name="page_background">#1A2737</color>
+    <color name="dialog_background">#212C3B</color>
+    <color name="input_background">#263140</color>
+    <color name="divider_background">#0E151F</color>
+</resources>

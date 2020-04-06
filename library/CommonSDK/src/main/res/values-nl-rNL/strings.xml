@@ -1,2 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources/>
+<resources>
+	<string name="empty_default">No more data</string>
+	<string name="fail_default">Data laden mislukt, klik hier om de pagina te verversen.</string>
+</resources>

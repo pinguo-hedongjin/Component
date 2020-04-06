@@ -13,4 +13,4 @@ package com.kubi.router.annotation
  */
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.BINARY)
-annotation class Route(val module: String, val path: String)
+annotation class Route(val module: String, val path: String, val desc: String)

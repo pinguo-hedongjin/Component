@@ -1,2 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources/>
+<resources>
+	<string name="empty_default">No more data</string>
+	<string name="fail_default"> 데이터 로딩에 실패했습니다. 페이지를 새로 고치려면 여기를 클릭하십시오.</string>
+</resources>

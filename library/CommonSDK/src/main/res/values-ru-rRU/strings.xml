@@ -1,2 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources/>
+<resources>
+	<string name="empty_default">No more data</string>
+	<string name="fail_default">Не удалось загрузить данные; нажмите здесь, чтобы обновить страницу.</string>
+</resources>

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">:library:base</string>
+	<string name="empty_default">No more data</string>
+	<string name="fail_default">Data loading failed, click here to refresh the page.</string>
 </resources>

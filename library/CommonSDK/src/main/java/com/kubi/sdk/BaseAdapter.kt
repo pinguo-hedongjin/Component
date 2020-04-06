@@ -135,7 +135,8 @@ interface ItemCallBack<D> {
 
 class InnerViewHolder<T>(
         val parent: ViewGroup,
-        val proxy: ViewHolderProxy<T>
+        val proxy: ViewHolderProxy<T>,
+        var tag: Any? = null
 ) : RecyclerView.ViewHolder(proxy.createView()) {
     init {
         proxy.holder = this@InnerViewHolder

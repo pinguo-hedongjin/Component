@@ -8,6 +8,7 @@ import javassist.ClassPool
 import javassist.CtClass
 import javassist.CtMethod
 import javassist.NotFoundException
+import javassist.bytecode.annotation.IntegerMemberValue
 import org.gradle.api.Project
 
 import java.util.jar.JarFile
@@ -23,7 +24,7 @@ class RegisterCodeGenerator {
     private ClassPool scanPool = ClassPool.getDefault()
 
     private File registerFile
-    private Set appLifecycleSet = new HashSet()
+    private HashMap<Integer, String> appLifecycleMap = new LinkedHashMap<Integer, String>()
     private Set activityLifecycleSet = new HashSet()
     private Set fragmentLifecycleSet = new HashSet()
 
@@ -138,7 +139,8 @@ class RegisterCodeGenerator {
             com.kubi.lifecycle.utils.Utils.getAnnotations(ct).each {
                 if (it.typeName == com.kubi.lifecycle.utils.Constants.REGISTER_APP_ANNOTATION_NAME) {
                     Logger.i "scan app = " + className
-                    appLifecycleSet.add(className)
+                    def priority = ((IntegerMemberValue)it.getMemberValue("priority")).getValue()
+                    appLifecycleMap[priority] = className
                 }
                 if (it.typeName == com.kubi.lifecycle.utils.Constants.REGISTER_ACTIVITY_ANNOTATION_NAME) {
                     Logger.i "scan activity = " + className
@@ -175,10 +177,10 @@ class RegisterCodeGenerator {
             ct.defrost()
         }
 
-        if (!appLifecycleSet.isEmpty()) {
-            Logger.i "${com.kubi.lifecycle.utils.Constants.REGISTER_APP_METHOD_NAME}:${getRegisterClass(appLifecycleSet)}"
+        if (!appLifecycleMap.isEmpty()) {
+            Logger.i "${com.kubi.lifecycle.utils.Constants.REGISTER_APP_METHOD_NAME}:${getRegisterClass(appLifecycleMap)}"
             CtMethod method = ct.getDeclaredMethod(com.kubi.lifecycle.utils.Constants.REGISTER_APP_METHOD_NAME)
-            method.setBody(getRegisterCode(appLifecycleSet))
+            method.setBody(getRegisterCode(appLifecycleMap))
         }
 
         if (!activityLifecycleSet.isEmpty()) {
@@ -217,6 +219,44 @@ class RegisterCodeGenerator {
         }
 
         return buffer.toString().substring(0, buffer.length() - 1) + "]"
+    }
+
+    private String getRegisterCode(HashMap<Integer, String> map) {
+        // 插入代码
+        StringBuffer buffer = new StringBuffer()
+
+        buffer.append("{")
+        sort(map).each {
+            buffer.append("\$1.add(new ${it.value}());")
+        }
+
+        buffer.append("}")
+
+        return buffer.toString()
+    }
+
+    private String getRegisterClass(HashMap<Integer, String> map) {
+        // 插入代码
+        StringBuffer buffer = new StringBuffer()
+
+        buffer.append("[")
+        sort(map).each {
+            buffer.append("${it.key}-${it.value},")
+        }
+
+        return buffer.toString().substring(0, buffer.length() - 1) + "]"
+    }
+
+    private List<Map.Entry<Integer, String>> sort(HashMap<Integer, String> map) {
+        List<Map.Entry<Integer, String>> list = new ArrayList<Map.Entry<Integer, String>>(map.entrySet())
+        Collections.sort(list, new Comparator<Map.Entry<Integer, String>>() {
+            @Override
+            int compare(Map.Entry<Integer, String> o1, Map.Entry<Integer, String> o2) {
+                return o1.key - o2.key
+            }
+        })
+
+        return list
     }
 
 }
